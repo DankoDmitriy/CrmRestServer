@@ -1,0 +1,10 @@
+.idea
+model/target
+model/src/main/webapp
+persistence/target
+persistence/src/main/webapp
+restServerApp/target
+restServerApp/src/main/webapp
+service/target
+service/src/main/webapp
+webSiteApp
