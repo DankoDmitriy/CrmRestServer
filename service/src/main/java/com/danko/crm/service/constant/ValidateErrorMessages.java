@@ -78,6 +78,9 @@ public final class ValidateErrorMessages {
     public static final String TICKET_SYSTEM_TICKET_ID_PROPERTIES = "ticket.system.id.properties";
     public static final String TICKET_SYSTEM_WAYBILL_PROPERTIES = "ticket.waybill.properties";
 
+    public static final String AUTHENTICATION_REQUEST_USER_NAME_PROPERTIES = "authentication.request.user.name.properties";
+    public static final String AUTHENTICATION_REQUEST_PASSWORD_PROPERTIES = "authentication.request.password.properties";
+
     private ValidateErrorMessages() {
     }
 }

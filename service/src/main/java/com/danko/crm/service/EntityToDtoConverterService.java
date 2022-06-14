@@ -14,6 +14,7 @@ import com.danko.crm.model.Position;
 import com.danko.crm.model.Role;
 import com.danko.crm.model.Ticket;
 import com.danko.crm.model.TicketType;
+import com.danko.crm.model.UserAuth;
 import com.danko.crm.service.dto.CarDto;
 import com.danko.crm.service.dto.CityDto;
 import com.danko.crm.service.dto.DepartmentDto;
@@ -28,6 +29,7 @@ import com.danko.crm.service.dto.PositionDto;
 import com.danko.crm.service.dto.RoleDto;
 import com.danko.crm.service.dto.TicketDto;
 import com.danko.crm.service.dto.TicketTypeDto;
+import com.danko.crm.service.dto.UserAuthDto;
 
 public interface EntityToDtoConverterService {
     CityDto convert(City city);
@@ -57,4 +59,6 @@ public interface EntityToDtoConverterService {
     TicketTypeDto convert(TicketType ticketType);
 
     TicketDto convert(Ticket ticket);
+
+    UserAuthDto convert(UserAuth userAuth);
 }

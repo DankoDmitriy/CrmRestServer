@@ -77,6 +77,9 @@ public final class ValidationRegexp {
     public static final String TICKET_SYSTEM_TICKET_ID_REGEXP = "^[a-zA-ZА-Яа-я0-9,.:;!?\\s-\"]{0,70}$";
     public static final String TICKET_SYSTEM_WAYBILL_REGEXP = "^[a-zA-ZА-Яа-я0-9,.:;!?\\s-\"]{0,70}$";
 
+    public static final String AUTHENTICATION_REQUEST_USER_NAME = "^[a-zA-ZА0-9]{8,16}$";
+    public static final String AUTHENTICATION_REQUEST_PASSWORD = "^[a-zA-ZА0-9,.:;!?]{8,16}$";
+
     private ValidationRegexp() {
     }
 }

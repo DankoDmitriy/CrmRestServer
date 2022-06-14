@@ -14,6 +14,7 @@ import com.danko.crm.model.Position;
 import com.danko.crm.model.Role;
 import com.danko.crm.model.Ticket;
 import com.danko.crm.model.TicketType;
+import com.danko.crm.model.UserAuth;
 import com.danko.crm.service.DtoToEntityConverterService;
 import com.danko.crm.service.converter.dto_to_entity.DtoToCarConverter;
 import com.danko.crm.service.converter.dto_to_entity.DtoToCityConverter;
@@ -29,6 +30,7 @@ import com.danko.crm.service.converter.dto_to_entity.DtoToPositionConverter;
 import com.danko.crm.service.converter.dto_to_entity.DtoToRoleConverter;
 import com.danko.crm.service.converter.dto_to_entity.DtoToTicketConverter;
 import com.danko.crm.service.converter.dto_to_entity.DtoToTicketTypeConverter;
+import com.danko.crm.service.converter.dto_to_entity.DtoToUserAuthConverter;
 import com.danko.crm.service.dto.CarDto;
 import com.danko.crm.service.dto.CityDto;
 import com.danko.crm.service.dto.DepartmentDto;
@@ -43,6 +45,7 @@ import com.danko.crm.service.dto.PositionDto;
 import com.danko.crm.service.dto.RoleDto;
 import com.danko.crm.service.dto.TicketDto;
 import com.danko.crm.service.dto.TicketTypeDto;
+import com.danko.crm.service.dto.UserAuthDto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -65,6 +68,7 @@ public class DtoToEntityConverterServiceImpl implements DtoToEntityConverterServ
     private DtoToLtdInstanceConverter dtoToLtdInstanceConverter;
     private DtoToTicketTypeConverter dtoToTicketTypeConverter;
     private DtoToTicketConverter dtoToTicketConverter;
+    private DtoToUserAuthConverter dtoToUserAuthConverter;
 
     @Override
     public City convert(CityDto cityDto) {
@@ -223,5 +227,18 @@ public class DtoToEntityConverterServiceImpl implements DtoToEntityConverterServ
             ticket.setCar(convert(ticketDto.getCar()));
         }
         return ticket;
+    }
+
+    @Override
+    public UserAuth convert(UserAuthDto userAuthDto) {
+        UserAuth userAuth = dtoToUserAuthConverter.convert(userAuthDto);
+        if (userAuthDto.getRoles() != null && !userAuthDto.getRoles().isEmpty()) {
+            userAuth.setRoles(
+                    userAuthDto.getRoles()
+                            .stream()
+                            .map(this::convert)
+                            .collect(Collectors.toList()));
+        }
+        return userAuth;
     }
 }
