@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,18 +30,21 @@ public class EmployeeController {
     private EmployeeService employeeService;
 
     @GetMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER') or hasRole('ROLE_USER')")
     public ResponseEntity<Page<EmployeeDto>> getAll(Pageable pageable) {
         Page<EmployeeDto> page = employeeService.findAll(pageable);
         return new ResponseEntity<>(page, HttpStatus.OK);
     }
 
     @GetMapping("/status/")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER') or hasRole('ROLE_USER')")
     public ResponseEntity<Page<EmployeeDto>> getAllByStatus(Pageable pageable, Status status) {
         Page<EmployeeDto> page = employeeService.findAllByStatus(pageable, status);
         return new ResponseEntity<>(page, HttpStatus.OK);
     }
 
     @GetMapping("/department/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER') or hasRole('ROLE_USER')")
     public ResponseEntity<Page<EmployeeDto>> getAllByDepartmentIdAndStatus(Pageable pageable,
                                                                            Status status, @PathVariable("id") Long id) {
         Page<EmployeeDto> page = employeeService.findAllByDepartmentIdAndStatus(pageable, id, status);
@@ -48,24 +52,28 @@ public class EmployeeController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER') or hasRole('ROLE_USER')")
     public ResponseEntity<EmployeeDto> getById(@PathVariable("id") Long id) {
         EmployeeDto employeeDto = employeeService.findById(id);
         return new ResponseEntity<>(employeeDto, HttpStatus.OK);
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')")
     public ResponseEntity<EmployeeDto> add(@Valid @RequestBody EmployeeDto employeeDto) {
         EmployeeDto employeeDtoFromDb = employeeService.save(employeeDto);
         return new ResponseEntity<>(employeeDtoFromDb, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')")
     public ResponseEntity<Void> deleteById(@PathVariable("id") long id) {
         employeeService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PatchMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')")
     public ResponseEntity<EmployeeDto> update(
             @Valid @RequestBody EmployeeDto employeeDto,
             @PathVariable("id") Long id) {
@@ -73,6 +81,7 @@ public class EmployeeController {
     }
 
     @PatchMapping("/updateRoles/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')")
     public ResponseEntity<EmployeeDto> updateRoles(
             @Valid @RequestBody EmployeeDto employeeDto,
             @PathVariable("id") Long id) {

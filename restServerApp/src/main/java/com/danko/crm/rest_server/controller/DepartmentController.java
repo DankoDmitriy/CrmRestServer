@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,36 +30,42 @@ public class DepartmentController {
     private DepartmentService departmentService;
 
     @GetMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER') or hasRole('ROLE_USER')")
     public ResponseEntity<Page<DepartmentDto>> getAll(Pageable pageable) {
         Page<DepartmentDto> page = departmentService.findAll(pageable);
         return new ResponseEntity<>(page, HttpStatus.OK);
     }
 
     @GetMapping("/status/")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER') or hasRole('ROLE_USER')")
     public ResponseEntity<Page<DepartmentDto>> getAllByStatus(Pageable pageable, Status status) {
         Page<DepartmentDto> page = departmentService.findAllByStatus(pageable, status);
         return new ResponseEntity<>(page, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER') or hasRole('ROLE_USER')")
     public ResponseEntity<DepartmentDto> getById(@PathVariable("id") long id) {
         DepartmentDto departmentDto = departmentService.findById(id);
         return new ResponseEntity<>(departmentDto, HttpStatus.OK);
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')")
     public ResponseEntity<DepartmentDto> add(@Valid @RequestBody DepartmentDto departmentDto) {
         DepartmentDto departmentDtoFromDb = departmentService.save(departmentDto);
         return new ResponseEntity<>(departmentDtoFromDb, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')")
     public ResponseEntity<Void> deleteById(@PathVariable("id") long id) {
         departmentService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PatchMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')")
     public ResponseEntity<DepartmentDto> update(
             @Valid @RequestBody DepartmentDto departmentDto,
             @PathVariable("id") Long id) {

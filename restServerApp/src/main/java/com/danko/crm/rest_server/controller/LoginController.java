@@ -35,13 +35,10 @@ public class LoginController {
     private final BCryptPasswordEncoder passwordEncoder;
 
     @PostMapping("/login")
-    public ResponseEntity login( @Valid @RequestBody AuthenticationRequestDto requestDto) {
+    public ResponseEntity login(@Valid @RequestBody AuthenticationRequestDto requestDto) {
         try {
 
             String username = requestDto.getUsername();
-            System.out.println(requestDto.getUsername());
-            System.out.println(requestDto.getPassword());
-            System.out.println(passwordEncoder.encode(requestDto.getPassword()));
 
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, requestDto.getPassword()));
             Optional<UserAuthDto> userAuthDtoOptional = userService.findUserByUserName(username);
@@ -50,7 +47,10 @@ public class LoginController {
                 throw new UsernameNotFoundException("User with username: " + username + " not found");
             }
 
-            String token = jwtTokenProvider.createToken(username, userAuthDtoOptional.get().getRoles());
+            String token = jwtTokenProvider.createToken(
+                    username,
+                    userAuthDtoOptional.get().getRoles(),
+                    userAuthDtoOptional.get().getId());
 
             Map<Object, Object> response = new HashMap<>();
             response.put("username", username);
