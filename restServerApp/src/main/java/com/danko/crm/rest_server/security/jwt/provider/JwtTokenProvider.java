@@ -8,6 +8,7 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,7 +26,6 @@ import java.util.Date;
 import java.util.List;
 
 @Component
-@AllArgsConstructor
 public class JwtTokenProvider {
     @Value("${jwt.token.secret}")
     private String secret;
@@ -36,13 +36,8 @@ public class JwtTokenProvider {
     @Value("${jwt.token.refresh.expired}")
     private long validityInMillisecondsRefreshToken;
 
+    @Autowired
     private UserDetailsService userDetailsService;
-
-    @Bean
-    public BCryptPasswordEncoder passwordEncoder() {
-        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-        return bCryptPasswordEncoder;
-    }
 
     @PostConstruct
     protected void init() {
