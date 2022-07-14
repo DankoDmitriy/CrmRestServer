@@ -1,6 +1,7 @@
 package com.danko.crm.rest_server.security.jwt.provider;
 
 import com.danko.crm.rest_server.security.jwt.exception.JwtAuthenticationException;
+import com.danko.crm.service.JwtRefreshTokenService;
 import com.danko.crm.service.dto.RoleDto;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -25,6 +26,7 @@ import java.util.List;
 @Component
 public class JwtTokenProvider {
     private static final String USER_ID = "id";
+    private static final String TOKEN_EXPIRED_EXCEPTION_MESSAGE="JWT token is expired or invalid";
     @Value("${jwt.token.secret}")
     private String secret;
 
@@ -36,6 +38,9 @@ public class JwtTokenProvider {
 
     @Autowired
     private UserDetailsService userDetailsService;
+
+    @Autowired
+    private JwtRefreshTokenService jwtRefreshTokenService;
 
     @PostConstruct
     protected void init() {
@@ -51,12 +56,30 @@ public class JwtTokenProvider {
         Date now = new Date();
         Date validity = new Date(now.getTime() + validityInMilliseconds);
 
-        return Jwts.builder()//
-                .setClaims(claims)//
-                .setIssuedAt(now)//
-                .setExpiration(validity)//
-                .signWith(SignatureAlgorithm.HS256, secret)//
+        return Jwts.builder()
+                .setClaims(claims)
+                .setIssuedAt(now)
+                .setExpiration(validity)
+                .signWith(SignatureAlgorithm.HS256, secret)
                 .compact();
+    }
+
+    public String createRefreshToken(String username, Long userId) {
+        Claims claims = Jwts.claims().setSubject(username);
+        claims.put(USER_ID, userId);
+
+        Date now = new Date();
+        Date validity = new Date(now.getTime() + validityInMillisecondsRefreshToken);
+
+        String refreshToken = Jwts.builder()
+                .setIssuedAt(now)
+                .setExpiration(validity)
+                .signWith(SignatureAlgorithm.HS256, secret)
+                .compact();
+
+        jwtRefreshTokenService.saveToken(refreshToken, userId);
+
+        return refreshToken;
     }
 
     public Authentication getAuthentication(String token) {
@@ -86,7 +109,7 @@ public class JwtTokenProvider {
 
             return true;
         } catch (JwtException | IllegalArgumentException e) {
-            throw new JwtAuthenticationException("JWT token is expired or invalid");
+            throw new JwtAuthenticationException(TOKEN_EXPIRED_EXCEPTION_MESSAGE);
         }
     }
 

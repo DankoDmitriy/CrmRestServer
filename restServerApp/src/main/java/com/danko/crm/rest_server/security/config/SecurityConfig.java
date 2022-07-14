@@ -10,14 +10,17 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebMvcConfigurer {
 
     private final JwtTokenProvider jwtTokenProvider;
 
     private static final String LOGIN_ENDPOINT = "/server/auth/login";
+    private static final String REFRESH_TOKEN_ENDPOINT = "/server/auth/refresh";
 
     @Autowired
     public SecurityConfig(JwtTokenProvider jwtTokenProvider) {
@@ -39,8 +42,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers(LOGIN_ENDPOINT).permitAll()
-                .anyRequest().authenticated()
+                .antMatchers(REFRESH_TOKEN_ENDPOINT).permitAll()
+//                .anyRequest().authenticated() todo
                 .and()
                 .apply(new JwtConfigurer(jwtTokenProvider));
+    }
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+//        registry.addMapping("/**")
+//                .allowedOrigins("*")
+//                .allowedMethods("*");
     }
 }
