@@ -62,7 +62,6 @@ public class JwtRefreshTokenServiceImpl implements JwtRefreshTokenService {
     @Transactional
     public RefreshToken disableRefreshTokenAfterGenerateNewRefreshToken(String refreshToken) {
         Optional<RefreshToken> optionalRefreshToken = findByTokenAndStatus(refreshToken, Status.ACTIVE);
-        RefreshToken updateTokenStatus = updateTokenStatus(optionalRefreshToken.get(), Status.NOT_ACTIVE);
-        return updateTokenStatus;
+        return updateTokenStatus(optionalRefreshToken.get(), Status.NOT_ACTIVE);
     }
 }
