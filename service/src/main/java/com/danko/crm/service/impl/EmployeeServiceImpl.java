@@ -13,6 +13,7 @@ import com.danko.crm.service.DepartmentService;
 import com.danko.crm.service.DtoToEntityConverterService;
 import com.danko.crm.service.EmployeeService;
 import com.danko.crm.service.EntityToDtoConverterService;
+import com.danko.crm.service.JwtRefreshTokenService;
 import com.danko.crm.service.PositionService;
 import com.danko.crm.service.dto.CityDto;
 import com.danko.crm.service.dto.DepartmentDto;
@@ -47,6 +48,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     private CityService cityService;
     private DtoToEntityConverterService dtoToEntityConverterService;
     private EntityToDtoConverterService entityToDtoConverterService;
+    private JwtRefreshTokenService jwtRefreshTokenService;
 
     @Override
     public EmployeeDto findById(Long id) {
@@ -206,6 +208,9 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
         if (employeeDto.getStatus() != null && !employeeDto.getStatus().equals(employeeFromDb.getStatus())) {
             employeeFromDb.setStatus(employeeDto.getStatus());
+            if (!employeeDto.getStatus().equals(Status.ACTIVE)) {
+                jwtRefreshTokenService.disableEmployeeTokens(employeeFromDb.getId());
+            }
         }
         employeeFromDb.setUpdate(now);
     }
