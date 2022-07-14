@@ -9,6 +9,8 @@ CRM system for accounting work on maintenance of customer facilities.
 Spring BOOT
 Spring Hibernate
 Spring Validation
+Spring Security 
+JWT
 Lombok
 JUnit
 MySQL
