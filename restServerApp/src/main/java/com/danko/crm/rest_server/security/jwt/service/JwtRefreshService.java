@@ -8,7 +8,7 @@ import com.danko.crm.service.JwtRefreshTokenService;
 import com.danko.crm.service.UserAuthService;
 import com.danko.crm.service.dto.UserAuthDto;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,7 +27,6 @@ public class JwtRefreshService {
     private static final String ACCESS_TOKEN = "token";
     private static final String REFRESH_TOKEN = "refreshToken";
     private static final String USER_NAME = "username";
-    private static final String FIELD_NAME_USER_NAME_IN_ACCESS_TOKEN = "sub";
     private static final String USER_WITH_USER_NAME_NOT_FOUND = "User not found";
     private static final String REFRESH_TOKEN_NOT_FOUND_EXCEPTION_MESSAGE = "refresh.token.not.found.exception.message";
 
@@ -57,15 +56,21 @@ public class JwtRefreshService {
     }
 
     public void generateNewAccessAndRefreshToken(Map<Object, Object> response, ServletRequest req, String refreshToken) {
-        Optional<RefreshToken> optionalRefreshToken = jwtRefreshTokenService.findByTokenAndStatus(refreshToken, Status.ACTIVE);
+        if (!checkRefreshToken(refreshToken)) {
+            throw new RefreshTokenNotFoundException(REFRESH_TOKEN_NOT_FOUND_EXCEPTION_MESSAGE);
+        }
+
+        Optional<RefreshToken> optionalRefreshToken =
+                jwtRefreshTokenService.findByTokenAndStatus(refreshToken, Status.ACTIVE);
 
         optionalRefreshToken.orElseThrow(
                 () -> new RefreshTokenNotFoundException(REFRESH_TOKEN_NOT_FOUND_EXCEPTION_MESSAGE));
 
         String token = jwtTokenProvider.resolveToken((HttpServletRequest) req);
         if (token != null) {
-            Jws<Claims> claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
-            String username = (String) claims.getBody().get(FIELD_NAME_USER_NAME_IN_ACCESS_TOKEN);
+
+            Claims claims = getClaimsFromToken(token);
+            String username = claims.getSubject();
 
             Optional<UserAuthDto> userAuthDtoOptional = userAuthService.findUserByUserName(username);
 
@@ -85,6 +90,20 @@ public class JwtRefreshService {
             response.put(USER_NAME, username);
             response.put(ACCESS_TOKEN, accessTokenNew);
             response.put(REFRESH_TOKEN, refreshTokenNew);
+        }
+    }
+
+    public Claims getClaimsFromToken(String token) {
+        try {
+            // Get Claims from valid token
+            return Jwts.parser()
+                    .setSigningKey(secret)
+                    .parseClaimsJws(token)
+                    .getBody();
+
+        } catch (ExpiredJwtException e) {
+            // Get Claims from expired token
+            return e.getClaims();
         }
     }
 }

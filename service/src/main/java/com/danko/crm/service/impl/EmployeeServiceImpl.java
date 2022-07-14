@@ -48,7 +48,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     private CityService cityService;
     private DtoToEntityConverterService dtoToEntityConverterService;
     private EntityToDtoConverterService entityToDtoConverterService;
-    private JwtRefreshTokenService jwtRefreshTokenService;
+//    FIXME - The dependencies of some of the beans in the application context form a cycle:
+//    private JwtRefreshTokenService jwtRefreshTokenService;
 
     @Override
     public EmployeeDto findById(Long id) {
@@ -208,9 +209,10 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
         if (employeeDto.getStatus() != null && !employeeDto.getStatus().equals(employeeFromDb.getStatus())) {
             employeeFromDb.setStatus(employeeDto.getStatus());
-            if (!employeeDto.getStatus().equals(Status.ACTIVE)) {
-                jwtRefreshTokenService.disableEmployeeTokens(employeeFromDb.getId());
-            }
+//    FIXME - The dependencies of some of the beans in the application context form a cycle:
+//            if (!employeeDto.getStatus().equals(Status.ACTIVE)) {
+//                jwtRefreshTokenService.disableEmployeeTokens(employeeFromDb.getId());
+//            }
         }
         employeeFromDb.setUpdate(now);
     }
