@@ -15,6 +15,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -75,8 +76,9 @@ public class LoginController {
         }
     }
 
-    @PostMapping("/refresh")
+    @GetMapping("/refresh")
     public ResponseEntity getNewToken(String refreshToken, ServletRequest req) {
+        System.out.println("refreshToken: "+refreshToken);
         Map<Object, Object> response = new HashMap<>();
         jwtRefreshService.generateNewAccessAndRefreshToken(response, req, refreshToken);
         return ResponseEntity.ok(response);

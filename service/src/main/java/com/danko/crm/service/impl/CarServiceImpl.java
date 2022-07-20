@@ -50,9 +50,9 @@ public class CarServiceImpl implements CarService {
             LocalDateTime now = LocalDateTime.now();
 
             Car car = dtoToEntityConverterService.convert(carDto);
-            carDto.setCreated(now);
-            carDto.setUpdate(now);
-            carDto.setStatus(Status.ACTIVE);
+            car.setCreated(now);
+            car.setUpdate(now);
+            car.setStatus(Status.ACTIVE);
             car.setCity(dtoToEntityConverterService.convert(cityDto));
 
             return entityToDtoConverterService.convert(carRepository.save(car));

@@ -56,7 +56,8 @@ public class EmployeeDto extends BaseDto {
     @Pattern(regexp = EMPLOYEE_PROXY_REGEXP, message = EMPLOYEE_PROXY_PROPERTIES)
     private String dov;
 
-    @Pattern(regexp = EMPLOYEE_TG_ID_REGEXP, message = EMPLOYEE_TG_ID_PROPERTIES)
+//    FIXME - bag with this field. Add apportion for this field will be null.
+//    @Pattern(regexp = EMPLOYEE_TG_ID_REGEXP, message = EMPLOYEE_TG_ID_PROPERTIES)
     private Integer tgId;
 
     @Pattern(regexp = EMPLOYEE_COMMENT_REGEXP, message = EMPLOYEE_COMMENT_PROPERTIES)
