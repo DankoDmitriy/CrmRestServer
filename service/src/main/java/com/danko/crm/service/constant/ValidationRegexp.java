@@ -58,7 +58,7 @@ public final class ValidationRegexp {
     public static final int TICKET_TYPE_ACTION_MAX = 1;
     public static final int TICKET_TYPE_PRIORITY_MIN = 1;
     public static final int TICKET_TYPE_PRIORITY_MAX = 100;
-    public static final String TICKET_TYPE_NAME_REGEXP = "^[a-zA-ZА-Яа-я0-9,.:;!?\\s-\"]{0,100}$";
+    public static final String TICKET_TYPE_NAME_REGEXP = "^[a-zA-ZА-Яа-я0-9,.:;()!?\\s-\"]{1,100}$";
 
     public static final int TICKET_OPEN_STATUS_MIN = 0;
     public static final int TICKET_OPEN_STATUS_MAX = 1;
