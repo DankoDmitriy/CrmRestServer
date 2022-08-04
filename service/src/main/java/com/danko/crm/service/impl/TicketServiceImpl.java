@@ -128,8 +128,6 @@ public class TicketServiceImpl implements TicketService {
                     ticketFromDb.getDateTransferDoc() != null &&
                     ticketFromDb.getDateCustomersDepartmentDoc() != null) {
                 closeTicketAndUpdateInstanceEquipment(ticketFromDb);
-            } else {
-                throw new EntityCanNotUpdatedException(EXCEPTION_ENTITY_CAN_NOT_UPDATED_PROPERTIES, ticketDto.getId());
             }
         } else {
             checkTicketDocumentsBeforeUpdate(ticketFromDb, ticketDto);
