@@ -40,7 +40,7 @@ import static com.danko.crm.service.constant.ExceptionErrorMessages.EXCEPTION_NE
 @Service
 @AllArgsConstructor
 public class EmployeeServiceImpl implements EmployeeService {
-    private static final String DEFAULT_ROLE = "User";
+    private static final String DEFAULT_ROLE = "ROLE_USER";
     private EmployeeRepository employeeRepository;
     private RoleRepository roleRepository;
     private PositionService positionService;
