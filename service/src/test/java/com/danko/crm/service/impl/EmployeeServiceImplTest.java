@@ -100,7 +100,7 @@ class EmployeeServiceImplTest {
         Mockito.when(cityService.findById(expected.getCity().getId())).thenReturn(expected.getCity());
         Mockito.when(positionService.findById(expected.getPosition().getId())).thenReturn(expected.getPosition());
         Mockito.when(departmentService.findById(expected.getDepartment().getId())).thenReturn(expected.getDepartment());
-        Mockito.when(roleRepository.findByName("User")).thenReturn(Optional.of(Role.builder().name("user").build()));
+        Mockito.when(roleRepository.findByName("ROLE_USER")).thenReturn(Optional.of(Role.builder().name("ROLE_USER").build()));
 
         EmployeeDto actual = employeeService.save(expected);
 
